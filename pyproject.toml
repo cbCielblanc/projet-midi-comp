@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chord_midi"
+version = "0.1.0"
+description = "Application graphique pour générer des progressions d'accords et les exporter en MIDI"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [{name = "cbCielblanc"}]
+dependencies = [
+    "PySide6",
+    "mido",
+    "music21"
+]
+
+[project.scripts]
+chord-midi = "chord_midi.__main__:main"
