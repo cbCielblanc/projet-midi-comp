@@ -8,7 +8,8 @@ from PySide6.QtWidgets import QGraphicsRectItem, QGraphicsItem, QInputDialog
 class NoteItem(QGraphicsRectItem):
     """Rectangle déplaçable représentant une note MIDI."""
     def __init__(self, x, y, w, h, pitch, *, vel=100, pan=64):
-        super().__init__(x, y, w, h)
+        super().__init__(0, 0, w, h)
+        self.setPos(x, y)
         self.setBrush(QColor(0, 122, 204))
         self.setPen(Qt.NoPen)
         self.setFlags(QGraphicsItem.ItemIsMovable |
