@@ -25,7 +25,6 @@ FALLBACK_STYLE_MAP = {
                 "min": ["i","iv","i","i","iv","iv","i","i","V","iv","i","V"]}
 }
 
-# styles.json est placé à la racine du paquet
 DEFAULT_STYLES_FILE = Path(__file__).resolve().parents[1] / "styles.json"
 
 def load_style_map(path: Union[str, Path] = DEFAULT_STYLES_FILE) -> Dict[str, Dict[str, List[str]]]:
