@@ -7,22 +7,35 @@ Dépendances : music21 ≥ 6, mido ≥ 1.3
 """
 from __future__ import annotations
 from pathlib import Path
-from typing import List
+from typing import List, Dict, Union
+import json
 
 import mido
 from mido import MidiFile, MidiTrack, Message, MetaMessage
 from music21 import key as m21key, roman, pitch
 
 # ——————————— styles d’accords (haute-niveau) ———————————
-STYLE_MAP = {
+FALLBACK_STYLE_MAP = {
     "pop":     {"maj": ["I","V","vi","IV"],      "min": ["i","VI","III","VII"]},
     "classic": {"maj": ["I","IV","V","I"],       "min": ["i","iv","V","i"]},
     "jazz":    {"maj": ["ii","V7","I"],          "min": ["iiø","V7","i"]},
     "soul":    {"maj": ["I","iii","IV","ii","V","I"],
                 "min": ["i","bIII","IV","V"]},
     "blues":   {"maj": ["I","IV","I","I","IV","IV","I","I","V","IV","I","V"],
-                "min": ["i","iv","i","i","iv","iv","i","i","V","iv","i","V"]},
+                "min": ["i","iv","i","i","iv","iv","i","i","V","iv","i","V"]}
 }
+
+DEFAULT_STYLES_FILE = Path(__file__).with_name("styles.json")
+
+def load_style_map(path: Union[str, Path] = DEFAULT_STYLES_FILE) -> Dict[str, Dict[str, List[str]]]:
+    """Charge un fichier JSON contenant les styles de progressions."""
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+try:  # charge le JSON par défaut, avec repli en dur
+    STYLE_MAP = load_style_map()
+except Exception:
+    STYLE_MAP = FALLBACK_STYLE_MAP
 
 # ————————————————— helpers internes —————————————————
 def _repeat_to_len(seq: List[str], n: int) -> List[str]:
@@ -59,10 +72,14 @@ def _best_inversion(prev: roman.RomanNumeral,
 
 # ——————————————— API publique ———————————————
 def generate_progression(tonic: str, mode="major",
-                         style="pop", total=4, *, smart_voicing=True):
+                         style="pop", total=4, *, smart_voicing=True,
+                         style_map: Union[Dict[str, Dict[str, List[str]]], str, Path, None] = None):
     """Liste de RomanNumeral music21 avec inversions optimisées."""
     mode, tonic = mode.lower().strip(), tonic.strip()
-    romans = STYLE_MAP[style]["maj" if mode == "major" else "min"]
+    smap = STYLE_MAP if style_map is None else style_map
+    if isinstance(smap, (str, Path)):
+        smap = load_style_map(smap)
+    romans = smap[style]["maj" if mode == "major" else "min"]
     romans = _repeat_to_len(romans, total)
     k = m21key.Key(tonic, mode)
     prog = [roman.RomanNumeral(rn, k) for rn in romans]
