@@ -11,10 +11,10 @@ Ce projet propose une petite application graphique pour générer et éditer des
 
 ## Installation
 
-Clonez le dépôt puis installez les dépendances :
+Clonez le dépôt puis installez le projet (et ses dépendances) en mode éditable :
 
 ```bash
-pip install -r requirements.txt
+pip install -e .
 ```
 
 ## Utilisation
