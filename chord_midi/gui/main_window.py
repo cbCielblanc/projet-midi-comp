@@ -11,7 +11,9 @@ from PySide6.QtWidgets import (
     QToolBar, QStatusBar
 )
 
-from chord_midi.midi.progression import generate_progression, STYLE_MAP
+from chord_midi.midi.progression import (
+    generate_progression, load_style_map, DEFAULT_STYLES_FILE
+)
 from .piano_roll import PianoRoll
 
 TONICS = ["C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"]
@@ -19,6 +21,7 @@ TONICS = ["C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"]
 class ChordMidiWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.style_map = load_style_map(DEFAULT_STYLES_FILE)
         self._palette()
         self._ui()
         self.resize(920, 540)
@@ -51,7 +54,7 @@ class ChordMidiWindow(QMainWindow):
         card, form = QGroupBox("Settings"), QFormLayout()
         self.tonic = self._cb(TONICS)
         self.mode  = self._cb(["major", "minor"])
-        self.style = self._cb(list(STYLE_MAP))
+        self.style = self._cb(list(self.style_map))
         self.count = self._sp(4, 1, 64)
         self.beats = self._sp(4, 1, 16)
         self.tempo = self._sp(120, 20, 300)
@@ -89,7 +92,8 @@ class ChordMidiWindow(QMainWindow):
             prog = generate_progression(self.tonic.currentText(),
                                         self.mode.currentText(),
                                         self.style.currentText(),
-                                        self.count.value())
+                                        self.count.value(),
+                                        style_map=self.style_map)
             self.roll.load(prog)
             path = self._export()
             self.statusBar().showMessage(f"Saved → {path}", 5000)

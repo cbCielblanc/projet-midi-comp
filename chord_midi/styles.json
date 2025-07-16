@@ -1,0 +1,10 @@
+{
+  "pop":     {"maj": ["I","V","vi","IV"],      "min": ["i","VI","III","VII"]},
+  "classic": {"maj": ["I","IV","V","I"],       "min": ["i","iv","V","i"]},
+  "jazz":    {"maj": ["ii","V7","I"],          "min": ["iiø","V7","i"]},
+  "soul":    {"maj": ["I","iii","IV","ii","V","I"],
+              "min": ["i","bIII","IV","V"]},
+  "blues":   {"maj": ["I","IV","I","I","IV","IV","I","I","V","IV","I","V"],
+              "min": ["i","iv","i","i","iv","iv","i","i","V","iv","i","V"]}
+}
+
