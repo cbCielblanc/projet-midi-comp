@@ -142,7 +142,11 @@ class PianoRoll(QGraphicsView):
             # start = int(it.x() * 480 / self.BAR_W)
             # 1 accord (BAR_W px)  →  `ticks`  (beats/chord * 480)
             start = int(it.x() * ticks / self.BAR_W)
-            ev += [(start,       'control_change', 10,  it.pan, ch),
-                   (start,       'note_on',        it.pitch, it.vel, ch),
-                   (start+ticks, 'note_off',       it.pitch, 0, ch)]
-        return sorted(ev, key=lambda t: t[0])
+            ev += [
+                (start,       'control_change', 10,  it.pan, ch),
+                (start,       'note_on',        it.pitch, it.vel, ch),
+                (start + ticks, 'note_off',       it.pitch, 0, ch),
+            ]
+
+        order = {'note_off': 0, 'control_change': 1, 'note_on': 2}
+        return sorted(ev, key=lambda t: (t[0], order.get(t[1], 3)))

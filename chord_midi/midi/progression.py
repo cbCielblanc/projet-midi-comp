@@ -89,7 +89,7 @@ def build_midi(rprog: List[roman.RomanNumeral], out="progression.mid",
             events.append((clock + tick_bar, 'note_off', n, 0))
         clock += tick_bar
 
-    events.sort(key=lambda e: e[0])
+    events.sort(key=lambda e: (e[0], 0 if e[1] == 'note_off' else 1))
     prev = 0
     for t, typ, note, velocity in events:
         tr.append(Message(typ, note=note, velocity=velocity,
