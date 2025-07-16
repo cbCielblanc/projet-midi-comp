@@ -35,6 +35,18 @@ mid_path = build_midi(prog, out="progression.mid")
 print("MIDI enregistré dans", mid_path)
 ```
 
+### Définir vos propres styles
+
+Les progressions sont chargées depuis le fichier `styles.json` du paquet.
+Vous pouvez modifier ce fichier ou en fournir un autre :
+
+```python
+from chord_midi import generate_progression, load_style_map
+
+my_styles = load_style_map("mon_styles.json")
+prog = generate_progression("D", style="ma_super_suite", style_map=my_styles)
+```
+
 ## Licence
 
 Ce projet est distribué sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus d'informations.

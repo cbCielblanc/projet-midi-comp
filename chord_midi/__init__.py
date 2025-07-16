@@ -11,7 +11,9 @@ from importlib import import_module
 _progression = import_module("chord_midi.midi.progression")
 generate_progression = _progression.generate_progression
 build_midi           = _progression.build_midi
+load_style_map       = _progression.load_style_map
 STYLE_MAP            = _progression.STYLE_MAP
+DEFAULT_STYLES_FILE  = _progression.DEFAULT_STYLES_FILE
 
 _main_window = import_module("chord_midi.gui.main_window")
 ChordMidiWindow = _main_window.ChordMidiWindow
@@ -19,6 +21,8 @@ ChordMidiWindow = _main_window.ChordMidiWindow
 __all__ = [
     "generate_progression",
     "build_midi",
+    "load_style_map",
     "STYLE_MAP",
+    "DEFAULT_STYLES_FILE",
     "ChordMidiWindow",
 ]
