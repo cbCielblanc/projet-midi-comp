@@ -79,16 +79,22 @@ def build_midi(rprog: List[roman.RomanNumeral], out="progression.mid",
     tr.append(MetaMessage("set_tempo", tempo=mido.bpm2tempo(bpm), time=0))
     tr.append(MetaMessage("time_signature", numerator=4, denominator=4, time=0))
     tr.append(Message("program_change", program=0, channel=channel, time=0))
-    tick_bar, first = beats * 480, True
+    tick_bar = beats * 480
+    events = []
+    clock = 0
     for rn in rprog:
         notes = _chord_midi_closed(rn, floor)
-        for i, n in enumerate(notes):
-            tr.append(Message('note_on', note=n, velocity=vel,
-                              channel=channel, time=0 if i or not first else 0))
-        for i, n in enumerate(notes):
-            tr.append(Message('note_off', note=n, velocity=0,
-                              channel=channel, time=tick_bar if i == 0 else 0))
-        first = False
+        for n in notes:
+            events.append((clock, 'note_on',  n, vel))
+            events.append((clock + tick_bar, 'note_off', n, 0))
+        clock += tick_bar
+
+    events.sort(key=lambda e: e[0])
+    prev = 0
+    for t, typ, note, velocity in events:
+        tr.append(Message(typ, note=note, velocity=velocity,
+                          channel=channel, time=t - prev))
+        prev = t
     path = Path(out).resolve()
     mid.save(path)
     return path
