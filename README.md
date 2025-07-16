@@ -35,3 +35,6 @@ mid_path = build_midi(prog, out="progression.mid")
 print("MIDI enregistré dans", mid_path)
 ```
 
+## Licence
+
+Ce projet est distribué sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus d'informations.
